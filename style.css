@@ -1,0 +1,326 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+    color: #ffffff;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1.5rem;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header */
+header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.brand {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(45deg, #ffffff, #cccccc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.subtitle {
+    font-size: 1rem;
+    font-weight: 300;
+    opacity: 0.8;
+}
+
+/* Main Content */
+main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 2rem 0;
+}
+
+/* Counter Section */
+.counter-section {
+    margin-bottom: 2rem;
+    width: 100%;
+    max-width: 600px;
+}
+
+.counter-display {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    font-size: 3.5rem;
+    font-weight: 700;
+}
+
+.current-number {
+    color: #ffffff;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+}
+
+.plus {
+    color: #ffffff;
+    margin-left: 1rem;
+    font-size: 3rem;
+    opacity: 0.7;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #ffffff, #cccccc);
+    border-radius: 4px;
+    width: 0%;
+    transition: width 0.5s ease;
+}
+
+.day-indicator {
+    font-size: 1.1rem;
+    font-weight: 500;
+    opacity: 0.8;
+    margin-bottom: 0.5rem;
+}
+
+.current-date {
+    font-size: 1rem;
+    font-weight: 400;
+    opacity: 0.7;
+    margin-bottom: 1rem;
+}
+
+/* Total Section */
+.total-section {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+
+.total-amount {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #ffffff;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+}
+
+/* Description */
+.description {
+    max-width: 600px;
+    margin-bottom: 2rem;
+}
+
+/* Milestones Section */
+.milestones-section {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+.milestones-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #ffffff;
+}
+
+.milestones-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1rem;
+    justify-content: center;
+    overflow-x: auto;
+    padding: 0.5rem 0;
+}
+
+.milestone {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 0.75rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    position: relative;
+    min-width: 100px;
+    flex-shrink: 0;
+}
+
+.milestone.completed {
+    background: rgba(74, 222, 128, 0.1);
+    border-color: rgba(74, 222, 128, 0.3);
+    color: #4ade80;
+}
+
+.milestone.current {
+    background: rgba(59, 130, 246, 0.1);
+    border-color: rgba(59, 130, 246, 0.3);
+    color: #3b82f6;
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
+}
+
+.milestone.pending {
+    opacity: 0.5;
+}
+
+.milestone-day {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.milestone-amount {
+    font-size: 0.9rem;
+    opacity: 0.8;
+    margin-bottom: 0.5rem;
+}
+
+.milestone-status {
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.milestone.completed .milestone-status {
+    color: #4ade80;
+}
+
+.milestone.current .milestone-status {
+    color: #3b82f6;
+}
+
+.description p {
+    font-size: 1rem;
+    line-height: 1.5;
+    opacity: 0.8;
+    font-weight: 300;
+}
+
+/* Footer - removed */
+
+/* Buttons - removed */
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        padding: 1rem;
+    }
+    
+    .brand {
+        font-size: 2.5rem;
+    }
+    
+    .subtitle {
+        font-size: 1rem;
+    }
+    
+    .counter-display {
+        font-size: 3rem;
+    }
+    
+    .plus {
+        font-size: 2.5rem;
+    }
+    
+    .total-amount {
+        font-size: 2.5rem;
+    }
+    
+    
+    .description p {
+        font-size: 1rem;
+    }
+    
+    
+    .milestones-container {
+        gap: 0.5rem;
+        justify-content: flex-start;
+        overflow-x: auto;
+        padding: 0.5rem 0;
+    }
+    
+    .milestone {
+        padding: 0.6rem;
+        min-width: 85px;
+    }
+    
+    .milestone-day {
+        font-size: 0.9rem;
+    }
+    
+    .milestone-amount {
+        font-size: 0.75rem;
+    }
+    
+    .milestone-status {
+        font-size: 0.7rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .brand {
+        font-size: 2rem;
+    }
+    
+    .counter-display {
+        font-size: 2.5rem;
+    }
+    
+    .plus {
+        font-size: 2rem;
+    }
+    
+    .total-amount {
+        font-size: 2rem;
+    }
+}
+
+/* Animation for number changes */
+.current-number.animate {
+    animation: numberChange 0.5s ease;
+}
+
+@keyframes numberChange {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}

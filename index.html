@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Efectul Compus - Economisește 1 leu în plus în fiecare zi</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 class="brand">@efectulcompus</h1>
+            <p class="subtitle">Proiect personal de economisire progresivă</p>
+        </header>
+
+        <main>
+            <div class="counter-section">
+                <div class="counter-display">
+                    <span class="current-number" id="currentNumber">1</span>
+                    <span class="plus">+</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="day-indicator">
+                    <span id="dayText">Ziua 1</span>
+                </div>
+            </div>
+
+            <div class="total-section">
+                <div class="total-amount" id="totalAmount">0 lei</div>
+            </div>
+
+            <div class="description">
+                <p>Economisește 1 leu în plus în fiecare zi timp de 365 de zile. În prima zi economisești 1 leu, în a doua zi 2 lei, în a treia zi 3 lei și așa mai departe...</p>
+            </div>
+
+            <div class="milestones-section">
+                <h3 class="milestones-title">Milestone-uri ale călătoriei</h3>
+                <div class="milestones-container" id="milestonesContainer">
+                    <!-- Milestone-urile vor fi generate dinamic -->
+                </div>
+            </div>
+        </main>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
