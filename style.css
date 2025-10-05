@@ -9,6 +9,9 @@ body {
     background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
     color: #ffffff;
     min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    touch-action: manipulation;
 }
 
 .container {
@@ -130,6 +133,67 @@ main {
     text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
 }
 
+/* Motivation Section */
+.motivation-section {
+    max-width: 700px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 193, 7, 0.05));
+    border-radius: 25px;
+    border: 2px solid rgba(255, 215, 0, 0.3);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.motivation-section::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 215, 0, 0.05) 0%, transparent 70%);
+    animation: rotate 20s linear infinite;
+    z-index: 0;
+}
+
+.motivation-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    z-index: 1;
+    position: relative;
+    animation: bounce 2s ease-in-out infinite;
+}
+
+.motivation-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #ffd700;
+    margin-bottom: 1rem;
+    text-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+    z-index: 1;
+    position: relative;
+}
+
+.motivation-text {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 1rem;
+    z-index: 1;
+    position: relative;
+}
+
+.motivation-subtitle {
+    font-size: 1rem;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.8);
+    font-style: italic;
+    z-index: 1;
+    position: relative;
+}
+
 /* Description */
 .description {
     max-width: 600px;
@@ -163,18 +227,33 @@ main {
     justify-content: center;
     overflow-x: auto;
     padding: 0.5rem 0;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
 }
 
 .milestone {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    padding: 0.75rem;
     text-align: center;
     transition: all 0.3s ease;
     position: relative;
-    min-width: 100px;
     flex-shrink: 0;
+    cursor: pointer;
+}
+
+/* Carduri uniforme pentru toate milestone-urile */
+.milestone-uniform {
+    background: rgba(255, 255, 255, 0.08);
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    padding: 0.8rem;
+    min-width: 100px;
+    margin: 0.2rem;
+}
+
+/* Stiluri aurii pentru milestone-urile importante */
+.milestone-gold {
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 193, 7, 0.1));
+    border: 2px solid rgba(255, 215, 0, 0.4);
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
 }
 
 .milestone.completed {
@@ -195,23 +274,28 @@ main {
     opacity: 0.5;
 }
 
+/* Stiluri uniforme pentru toate milestone-urile */
 .milestone-day {
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: 700;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.4rem;
+    line-height: 1.2;
 }
 
 .milestone-amount {
     font-size: 0.9rem;
-    opacity: 0.8;
-    margin-bottom: 0.5rem;
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+    line-height: 1.2;
+    opacity: 0.9;
 }
 
 .milestone-status {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    line-height: 1;
 }
 
 .milestone.completed .milestone-status {
@@ -220,6 +304,35 @@ main {
 
 .milestone.current .milestone-status {
     color: #3b82f6;
+}
+
+/* Stiluri speciale pentru milestone-urile aurii */
+.milestone-gold.completed {
+    background: linear-gradient(135deg, rgba(74, 222, 128, 0.2), rgba(34, 197, 94, 0.15));
+    border-color: rgba(74, 222, 128, 0.5);
+    color: #22c55e;
+}
+
+.milestone-gold.current {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(37, 99, 235, 0.15));
+    border-color: rgba(59, 130, 246, 0.5);
+    color: #3b82f6;
+}
+
+.milestone-gold .milestone-status {
+    color: #ffd700;
+    font-weight: 600;
+}
+
+/* Hover effect pentru milestone-uri importante */
+.milestone:hover {
+    transform: scale(1.1);
+    z-index: 10;
+}
+
+.milestone:hover .milestone-amount {
+    opacity: 1;
+    font-weight: 600;
 }
 
 .description p {
@@ -234,6 +347,41 @@ main {
 /* Buttons - removed */
 
 /* Responsive Design */
+
+/* Large tablets and small desktops */
+@media (max-width: 1024px) {
+    .container {
+        padding: 1.25rem;
+    }
+    
+    .milestones-container {
+        gap: 0.6rem;
+    }
+    
+    .milestone-uniform {
+        min-width: 90px;
+        padding: 0.7rem;
+    }
+    
+    .motivation-section {
+        padding: 1.5rem;
+        margin: 1.5rem auto;
+    }
+    
+    .motivation-icon {
+        font-size: 2.5rem;
+    }
+    
+    .motivation-title {
+        font-size: 1.5rem;
+    }
+    
+    .motivation-text {
+        font-size: 1.2rem;
+    }
+}
+
+/* Tablets */
 @media (max-width: 768px) {
     .container {
         padding: 1rem;
@@ -259,11 +407,18 @@ main {
         font-size: 2.5rem;
     }
     
-    
     .description p {
         font-size: 1rem;
     }
     
+    .milestones-section {
+        padding: 1.25rem;
+        margin: 1.5rem auto;
+    }
+    
+    .milestones-title {
+        font-size: 1.3rem;
+    }
     
     .milestones-container {
         gap: 0.5rem;
@@ -272,9 +427,9 @@ main {
         padding: 0.5rem 0;
     }
     
-    .milestone {
+    .milestone-uniform {
         padding: 0.6rem;
-        min-width: 85px;
+        min-width: 80px;
     }
     
     .milestone-day {
@@ -282,17 +437,100 @@ main {
     }
     
     .milestone-amount {
-        font-size: 0.75rem;
+        font-size: 0.8rem;
     }
     
     .milestone-status {
-        font-size: 0.7rem;
+        font-size: 0.65rem;
+    }
+    
+    .motivation-section {
+        padding: 1.25rem;
+        margin: 1.25rem auto;
+    }
+    
+    .motivation-icon {
+        font-size: 2.2rem;
+    }
+    
+    .motivation-title {
+        font-size: 1.3rem;
+    }
+    
+    .motivation-text {
+        font-size: 1.1rem;
+    }
+    
+    .motivation-subtitle {
+        font-size: 0.9rem;
     }
 }
 
+/* Mobile landscape */
+@media (max-width: 640px) {
+    .counter-display {
+        font-size: 2.8rem;
+    }
+    
+    .plus {
+        font-size: 2.3rem;
+    }
+    
+    .total-amount {
+        font-size: 2.3rem;
+    }
+    
+    .milestones-container {
+        gap: 0.4rem;
+    }
+    
+    .milestone-uniform {
+        min-width: 70px;
+        padding: 0.5rem;
+    }
+    
+    .milestone-day {
+        font-size: 0.8rem;
+    }
+    
+    .milestone-amount {
+        font-size: 0.7rem;
+    }
+    
+    .motivation-section {
+        padding: 1rem;
+        margin: 1rem auto;
+    }
+    
+    .motivation-icon {
+        font-size: 2rem;
+    }
+    
+    .motivation-title {
+        font-size: 1.2rem;
+    }
+    
+    .motivation-text {
+        font-size: 1rem;
+    }
+    
+    .motivation-subtitle {
+        font-size: 0.8rem;
+    }
+}
+
+/* Mobile portrait */
 @media (max-width: 480px) {
+    .container {
+        padding: 0.75rem;
+    }
+    
     .brand {
         font-size: 2rem;
+    }
+    
+    .subtitle {
+        font-size: 0.9rem;
     }
     
     .counter-display {
@@ -305,6 +543,128 @@ main {
     
     .total-amount {
         font-size: 2rem;
+    }
+    
+    .description p {
+        font-size: 0.9rem;
+    }
+    
+    .milestones-section {
+        padding: 1rem;
+        margin: 1rem auto;
+    }
+    
+    .milestones-title {
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+    }
+    
+    .milestones-container {
+        gap: 0.3rem;
+        padding: 0.3rem 0;
+    }
+    
+    .milestone-uniform {
+        padding: 0.4rem;
+        min-width: 60px;
+    }
+    
+    .milestone-day {
+        font-size: 0.7rem;
+        margin-bottom: 0.3rem;
+    }
+    
+    .milestone-amount {
+        font-size: 0.6rem;
+        margin-bottom: 0.3rem;
+    }
+    
+    .milestone-status {
+        font-size: 0.55rem;
+    }
+    
+    .motivation-section {
+        padding: 0.8rem;
+        margin: 0.8rem auto;
+    }
+    
+    .motivation-icon {
+        font-size: 1.8rem;
+    }
+    
+    .motivation-title {
+        font-size: 1.1rem;
+    }
+    
+    .motivation-text {
+        font-size: 0.95rem;
+    }
+    
+    .motivation-subtitle {
+        font-size: 0.75rem;
+    }
+}
+
+/* Small mobile */
+@media (max-width: 360px) {
+    .container {
+        padding: 0.5rem;
+    }
+    
+    .brand {
+        font-size: 1.8rem;
+    }
+    
+    .counter-display {
+        font-size: 2.2rem;
+    }
+    
+    .plus {
+        font-size: 1.8rem;
+    }
+    
+    .total-amount {
+        font-size: 1.8rem;
+    }
+    
+    .milestone-uniform {
+        min-width: 50px;
+        padding: 0.3rem;
+    }
+    
+    .milestone-day {
+        font-size: 0.6rem;
+        margin-bottom: 0.2rem;
+    }
+    
+    .milestone-amount {
+        font-size: 0.5rem;
+        margin-bottom: 0.2rem;
+    }
+    
+    .milestone-status {
+        font-size: 0.45rem;
+    }
+    
+    .motivation-section {
+        padding: 0.6rem;
+        margin: 0.6rem auto;
+    }
+    
+    .motivation-icon {
+        font-size: 1.5rem;
+    }
+    
+    .motivation-title {
+        font-size: 1rem;
+    }
+    
+    .motivation-text {
+        font-size: 0.9rem;
+    }
+    
+    .motivation-subtitle {
+        font-size: 0.7rem;
     }
 }
 
@@ -322,5 +682,39 @@ main {
     }
     100% {
         transform: scale(1);
+    }
+}
+
+/* Animations for motivation section */
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-10px);
+    }
+    60% {
+        transform: translateY(-5px);
+    }
+}
+
+@keyframes rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.4);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(255, 215, 0, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 215, 0, 0);
     }
 }

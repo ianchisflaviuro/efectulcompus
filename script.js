@@ -95,18 +95,20 @@ class EfectulCompus {
         `;
     }
     
-    // Generează milestone-urile
+    // Generează milestone-urile pentru toate cele 365 de zile
     generateMilestones() {
-        const milestones = [7, 14, 21, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330, 365];
         const container = document.getElementById('milestonesContainer');
         
         if (!container) return;
         
         container.innerHTML = '';
         
-        milestones.forEach(day => {
+        // Zilele importante care vor avea carduri mari
+        const importantDays = [1, 7, 14, 21, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330, 365];
+        
+        // Generează milestone-uri pentru toate cele 365 de zile
+        for (let day = 1; day <= this.maxNumber; day++) {
             const milestone = document.createElement('div');
-            milestone.className = 'milestone';
             
             // Calculează suma pentru acest milestone
             const milestoneAmount = (day * (day + 1)) / 2;
@@ -124,7 +126,12 @@ class EfectulCompus {
                 statusText = 'Viitor';
             }
             
-            milestone.classList.add(status);
+            // Toate cardurile au aceeași mărime și afișează ziua și suma
+            if (importantDays.includes(day)) {
+                milestone.className = `milestone milestone-uniform milestone-gold ${status}`;
+            } else {
+                milestone.className = `milestone milestone-uniform ${status}`;
+            }
             
             milestone.innerHTML = `
                 <div class="milestone-day">Ziua ${day}</div>
@@ -133,7 +140,7 @@ class EfectulCompus {
             `;
             
             container.appendChild(milestone);
-        });
+        }
     }
     
     // Afișează data curentă
