@@ -25,6 +25,7 @@ class EfectulCompus {
         this.showCurrentDate();
         this.showProjectInfo();
         this.generateMilestones();
+        this.checkForMilestone();
     }
     
     // Calculează ziua curentă bazată pe data de astăzi
@@ -59,6 +60,7 @@ class EfectulCompus {
             this.updateDisplay();
             this.showCurrentDate();
             this.showProjectInfo();
+            this.checkForMilestone();
             
             // Configurează actualizarea pentru următoarea zi
             this.setupAutoUpdate();
@@ -93,6 +95,109 @@ class EfectulCompus {
                 ${daysRemaining > 0 ? `${daysRemaining} zile rămase` : 'Proiect completat!'}
             </div>
         `;
+    }
+    
+    // Verifică dacă trebuie să afișeze felicitări pentru un milestone
+    checkForMilestone() {
+        const importantDays = [1, 7, 14, 21, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330, 365];
+        
+        // Verifică dacă ziua curentă este un milestone
+        if (importantDays.includes(this.currentNumber)) {
+            // Verifică dacă nu am afișat deja felicitările pentru acest milestone
+            const lastCelebratedDay = localStorage.getItem('lastCelebratedDay');
+            if (lastCelebratedDay != this.currentNumber) {
+                // Așteaptă un pic ca pagina să se încarce complet
+                setTimeout(() => {
+                    this.showCelebration();
+                    localStorage.setItem('lastCelebratedDay', this.currentNumber);
+                }, 500);
+            }
+        }
+    }
+    
+    // Afișează artificii și mesaj de felicitare
+    showCelebration() {
+        // Creează overlay-ul pentru felicitări
+        const overlay = document.createElement('div');
+        overlay.className = 'celebration-overlay';
+        
+        const milestoneAmount = (this.currentNumber * (this.currentNumber + 1)) / 2;
+        
+        overlay.innerHTML = `
+            <div class="celebration-content">
+                <div class="celebration-icon">🎉</div>
+                <h2 class="celebration-title">Felicitări!</h2>
+                <p class="celebration-message">Ai atins Milestone-ul Zilei ${this.currentNumber}!</p>
+                <p class="celebration-amount">${milestoneAmount.toLocaleString('ro-RO')} lei economisiți</p>
+                <p class="celebration-encouragement">Continue așa! Ești pe drumul cel bun! 🌟</p>
+                <button class="celebration-close" onclick="this.closest('.celebration-overlay').remove()">Închide</button>
+            </div>
+        `;
+        
+        document.body.appendChild(overlay);
+        
+        // Pornește artificiile
+        this.startFireworks();
+        
+        // Oprește artificiile după 5 secunde
+        setTimeout(() => {
+            this.stopFireworks();
+        }, 5000);
+    }
+    
+    // Creează și pornește artificiile
+    startFireworks() {
+        this.fireworksInterval = setInterval(() => {
+            this.createFirework();
+        }, 300);
+    }
+    
+    // Oprește artificiile
+    stopFireworks() {
+        if (this.fireworksInterval) {
+            clearInterval(this.fireworksInterval);
+        }
+    }
+    
+    // Creează un foc de artificii
+    createFirework() {
+        const firework = document.createElement('div');
+        firework.className = 'firework';
+        
+        // Poziționează random pe ecran
+        const x = Math.random() * window.innerWidth;
+        const y = Math.random() * (window.innerHeight * 0.6); // Doar în partea de sus
+        
+        firework.style.left = x + 'px';
+        firework.style.top = y + 'px';
+        
+        // Culoare random
+        const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ffd700', '#ff6b6b', '#4ecdc4', '#95e1d3'];
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        
+        // Creează particulele
+        for (let i = 0; i < 30; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'firework-particle';
+            particle.style.background = color;
+            
+            const angle = (Math.PI * 2 * i) / 30;
+            const velocity = 2 + Math.random() * 2;
+            const vx = Math.cos(angle) * velocity;
+            const vy = Math.sin(angle) * velocity;
+            
+            particle.style.setProperty('--vx', vx);
+            particle.style.setProperty('--vy', vy);
+            
+            firework.appendChild(particle);
+        }
+        
+        document.body.appendChild(firework);
+        
+        // Elimină artificiile după animație
+        setTimeout(() => {
+            firework.remove();
+        }, 1500);
     }
     
     // Generează milestone-urile pentru toate cele 365 de zile
@@ -169,6 +274,7 @@ class EfectulCompus {
         this.updateProgressBar();
         this.updateDayIndicator();
         this.updateTotalAmount();
+        this.updateTotalPercent();
         this.generateMilestones();
     }
     
@@ -224,6 +330,16 @@ class EfectulCompus {
             // Animația pentru suma parțială
             this.animateNumber(totalElement, partialSum, totalSum);
         }
+    }
+
+    // Actualizează procentul completat cu 5 zecimale
+    updateTotalPercent() {
+        const percentElement = document.getElementById('totalPercent');
+        if (!percentElement) return;
+        const totalSum = (this.maxNumber * (this.maxNumber + 1)) / 2;
+        const partialSum = (this.currentNumber * (this.currentNumber + 1)) / 2;
+        const percent = (partialSum / totalSum) * 100;
+        percentElement.textContent = `${percent.toFixed(5)}%`;
     }
     
     // Animație pentru numere
