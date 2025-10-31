@@ -33,6 +33,25 @@
                 <div class="total-percent" id="totalPercent">0.00000%</div>
             </div>
 
+            <section class="transactions-section">
+                <h3 class="transactions-title">Jurnal contribuții</h3>
+                <div class="transactions-controls">
+                    <input id="amountInput" class="amount-input" type="number" inputmode="decimal" step="0.01" placeholder="Suma (+ depunere, - retragere)">
+                    <button id="addAmountBtn" class="primary-btn">Adaugă</button>
+                    <button id="resetDataBtn" class="secondary-btn">Reset</button>
+                </div>
+                <div class="transactions-meta">
+                    <div>Sold curent: <span id="balanceValue">0</span> lei</div>
+                    <div>Țintă totală: <span id="goalValue">0</span> lei</div>
+                </div>
+                <div id="transactionsLog" class="transactions-log"></div>
+            </section>
+
+            <section class="days-section">
+                <h3 class="days-title">Zile acoperite</h3>
+                <div id="daysGrid" class="days-grid" aria-live="polite"></div>
+            </section>
+
             <div class="motivation-section">
                 <div class="motivation-icon">🏡</div>
                 <h2 class="motivation-title">Motivul Proiectului</h2>

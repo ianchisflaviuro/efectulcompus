@@ -3,80 +3,90 @@
 class EfectulCompus {
     constructor() {
         this.maxNumber = 365;
-        // Încarcă data de început din localStorage sau folosește data curentă
-        this.startDate = this.loadStartDate();
-        this.currentNumber = this.calculateCurrentDay();
+        this.totalGoal = (this.maxNumber * (this.maxNumber + 1)) / 2; // 66795
+        this.balanceKey = 'efc_balance_v1';
+        this.txKey = 'efc_transactions_v1';
+        this.balance = this.loadBalance();
+        this.transactions = this.loadTransactions();
+        this.currentNumber = this.computePaidDays(this.balance);
         this.isAnimating = false;
         
         this.init();
     }
     
-    // Încarcă data de început din localStorage sau creează una nouă
-    loadStartDate() {
-        // Forțează data de început la 3 octombrie 2025
-        const startDate = new Date('2025-10-03T00:00:00');
-        localStorage.setItem('efectulCompusStartDate', startDate.toISOString());
-        return startDate;
-    }
-    
     init() {
-        this.setupAutoUpdate();
+        this.bindUI();
         this.updateDisplay();
         this.showCurrentDate();
         this.showProjectInfo();
         this.generateMilestones();
+        this.buildDaysGrid();
+        this.renderTransactionsLog();
         this.checkForMilestone();
     }
     
-    // Calculează ziua curentă bazată pe data de astăzi
-    calculateCurrentDay() {
-        const today = new Date();
-        const timeDiff = today.getTime() - this.startDate.getTime();
-        const daysDiff = Math.floor(timeDiff / (1000 * 3600 * 24)) + 1;
-        
-        // Limitează la maximum 365 de zile (proiectul durează 1 an)
-        const currentDay = Math.min(Math.max(daysDiff, 1), this.maxNumber);
-        
-        console.log(`Data de început: ${this.startDate.toLocaleDateString('ro-RO')}`);
-        console.log(`Data curentă: ${today.toLocaleDateString('ro-RO')}`);
-        console.log(`Diferența în zile: ${daysDiff}`);
-        console.log(`Ziua calculată: ${currentDay} (din ${this.maxNumber})`);
-        
-        return currentDay;
+    // Persistence
+    loadBalance() {
+        const v = parseFloat(localStorage.getItem(this.balanceKey));
+        return Number.isFinite(v) ? v : 0;
+    }
+
+    saveBalance() {
+        localStorage.setItem(this.balanceKey, String(this.balance));
+    }
+
+    loadTransactions() {
+        try { return JSON.parse(localStorage.getItem(this.txKey) || '[]'); } catch { return []; }
+    }
+
+    saveTransactions() {
+        localStorage.setItem(this.txKey, JSON.stringify(this.transactions));
+    }
+
+    // Logic: compute paid days from balance using triangular numbers
+    computePaidDays(balance) {
+        const b = Math.max(0, Math.min(balance, this.totalGoal));
+        const k = Math.floor((Math.sqrt(8 * b + 1) - 1) / 2);
+        return Math.min(this.maxNumber, Math.max(0, k));
     }
     
-    // Configurează actualizarea automată la 00:00
-    setupAutoUpdate() {
-        const now = new Date();
-        const tomorrow = new Date(now);
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        tomorrow.setHours(0, 0, 0, 0);
-        
-        const timeUntilMidnight = tomorrow.getTime() - now.getTime();
-        
-        // Actualizează la miezul nopții
-        setTimeout(() => {
-            this.currentNumber = this.calculateCurrentDay();
+    // UI bindings
+    bindUI() {
+        const addBtn = document.getElementById('addAmountBtn');
+        const resetBtn = document.getElementById('resetDataBtn');
+        const input = document.getElementById('amountInput');
+        if (addBtn && input) {
+            addBtn.addEventListener('click', () => {
+                const amount = parseFloat(input.value.replace(',', '.'));
+                if (!Number.isFinite(amount) || amount === 0) return;
+                this.addTransaction(amount);
+                input.value = '';
+                input.focus();
+            });
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    addBtn.click();
+                }
+            });
+        }
+        if (resetBtn) {
+            resetBtn.addEventListener('click', () => {
+                if (confirm('Sigur dorești să resetezi datele?')) {
+                    this.balance = 0;
+                    this.transactions = [];
+                    this.saveBalance();
+                    this.saveTransactions();
+                    this.currentNumber = this.computePaidDays(this.balance);
             this.updateDisplay();
-            this.showCurrentDate();
-            this.showProjectInfo();
-            this.checkForMilestone();
-            
-            // Configurează actualizarea pentru următoarea zi
-            this.setupAutoUpdate();
-        }, timeUntilMidnight);
-        
-        console.log(`Următoarea actualizare la: ${tomorrow.toLocaleString('ro-RO')}`);
+                    this.buildDaysGrid();
+                    this.renderTransactionsLog();
+                }
+            });
+        }
     }
     
     // Afișează informațiile despre proiect
     showProjectInfo() {
-        const startDateString = this.startDate.toLocaleDateString('ro-RO', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-        });
-        
         // Adaugă sau actualizează afișajul informațiilor proiectului
         let projectInfoElement = document.getElementById('projectInfo');
         if (!projectInfoElement) {
@@ -88,9 +98,6 @@ class EfectulCompus {
         
         const daysRemaining = Math.max(0, this.maxNumber - this.currentNumber);
         projectInfoElement.innerHTML = `
-            <div style="font-size: 0.9rem; opacity: 0.7; margin-bottom: 0.5rem;">
-                Proiect început: ${startDateString}
-            </div>
             <div style="font-size: 0.9rem; opacity: 0.7;">
                 ${daysRemaining > 0 ? `${daysRemaining} zile rămase` : 'Proiect completat!'}
             </div>
@@ -270,12 +277,15 @@ class EfectulCompus {
     
     // Actualizează afișajul
     updateDisplay() {
+        this.currentNumber = this.computePaidDays(this.balance);
         this.updateCurrentNumber();
         this.updateProgressBar();
         this.updateDayIndicator();
         this.updateTotalAmount();
         this.updateTotalPercent();
         this.generateMilestones();
+        this.updateMeta();
+        this.paintDaysGrid();
     }
     
     // Actualizează numărul curent cu animație
@@ -318,17 +328,9 @@ class EfectulCompus {
     updateTotalAmount() {
         const totalElement = document.getElementById('totalAmount');
         if (totalElement) {
-            // Calculează suma totală a proiectului (1+2+3+...+365)
-            const totalSum = (this.maxNumber * (this.maxNumber + 1)) / 2;
-            
-            // Calculează suma parțială până la numărul curent
-            const partialSum = (this.currentNumber * (this.currentNumber + 1)) / 2;
-            
-            // Afișează suma parțială și totalul proiectului
-            const displayText = `${partialSum.toLocaleString('ro-RO')} / ${totalSum.toLocaleString('ro-RO')} lei`;
-            
-            // Animația pentru suma parțială
-            this.animateNumber(totalElement, partialSum, totalSum);
+            const totalSum = this.totalGoal;
+            const shown = Math.min(this.balance, totalSum);
+            this.animateNumber(totalElement, shown, totalSum);
         }
     }
 
@@ -336,9 +338,9 @@ class EfectulCompus {
     updateTotalPercent() {
         const percentElement = document.getElementById('totalPercent');
         if (!percentElement) return;
-        const totalSum = (this.maxNumber * (this.maxNumber + 1)) / 2;
-        const partialSum = (this.currentNumber * (this.currentNumber + 1)) / 2;
-        const percent = (partialSum / totalSum) * 100;
+        const totalSum = this.totalGoal;
+        const partial = Math.min(this.balance, totalSum);
+        const percent = (partial / totalSum) * 100;
         percentElement.textContent = `${percent.toFixed(5)}%`;
     }
     
@@ -366,6 +368,80 @@ class EfectulCompus {
         };
         
         requestAnimationFrame(animate);
+    }
+    // Days Grid
+    buildDaysGrid() {
+        const grid = document.getElementById('daysGrid');
+        if (!grid) return;
+        grid.innerHTML = '';
+        for (let day = 1; day <= this.maxNumber; day++) {
+            const item = document.createElement('div');
+            item.className = 'day-item';
+            item.innerHTML = `
+                <label class="day">
+                    <input type="checkbox" disabled>
+                    <span class="day-label">Ziua ${day}</span>
+                    <span class="day-amount">${day.toLocaleString('ro-RO')} lei</span>
+                </label>
+            `;
+            grid.appendChild(item);
+        }
+        this.paintDaysGrid();
+        this.updateMeta();
+    }
+
+    paintDaysGrid() {
+        const grid = document.getElementById('daysGrid');
+        if (!grid) return;
+        const paid = this.currentNumber;
+        const boxes = grid.querySelectorAll('input[type="checkbox"]');
+        boxes.forEach((box, idx) => {
+            box.checked = idx < paid;
+            const wrapper = box.closest('.day');
+            if (wrapper) {
+                wrapper.classList.toggle('paid', idx < paid);
+            }
+        });
+    }
+
+    updateMeta() {
+        const balEl = document.getElementById('balanceValue');
+        const goalEl = document.getElementById('goalValue');
+        if (balEl) balEl.textContent = Math.max(0, this.balance).toLocaleString('ro-RO');
+        if (goalEl) goalEl.textContent = this.totalGoal.toLocaleString('ro-RO');
+    }
+
+    // Transactions
+    addTransaction(amount) {
+        const now = new Date();
+        this.transactions.unshift({
+            id: now.getTime(),
+            ts: now.toISOString(),
+            amount
+        });
+        this.balance = Math.max(0, Math.min(this.balance + amount, this.totalGoal));
+        this.saveTransactions();
+        this.saveBalance();
+        this.updateDisplay();
+        this.renderTransactionsLog();
+        this.checkForMilestone();
+    }
+
+    renderTransactionsLog() {
+        const log = document.getElementById('transactionsLog');
+        if (!log) return;
+        if (this.transactions.length === 0) {
+            log.innerHTML = '<div class="log-empty">Nu există tranzacții încă.</div>';
+            return;
+        }
+        log.innerHTML = this.transactions
+            .map(t => {
+                const dt = new Date(t.ts).toLocaleString('ro-RO');
+                const signClass = t.amount >= 0 ? 'plus' : 'minus';
+                const sign = t.amount >= 0 ? '+' : '';
+                return `<div class="log-row"><span class="log-date">${dt}</span><span class="log-amount ${signClass}">${sign}${t.amount.toLocaleString('ro-RO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} lei</span></div>`;
+            })
+            .join('');
     }
 }
 
